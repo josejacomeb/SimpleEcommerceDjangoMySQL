@@ -10,8 +10,14 @@
 </head>
 
 <body>
+
+    {% for elect_data in datos_electrodomesticos %}
+        {% include "ecommerce/tablas.html" with atributos=elect_data.atributos  %}
+    {% endfor %}
+
+
     <h1>Televisores</h1>
-    <a href="{% url 'anadir_tv' %}">Añadir una nueva TV</a>
+    <a href="{% url 'anadir' 'tv' %}">Añadir una nueva TV</a>
 
     <table border="1">
         {% if televisores %}
@@ -32,8 +38,8 @@
                 <td>{{ tv.marca }}</td>
                 <td>{{ tv.modelo }}</td>
                 <td>{{ tv.resolucion }}</td>
-                <td><a href="{% url 'editar_tv' tv.id %}">Editar</a></td>
-                <td><a href="{% url 'eliminar' tv.id %}">Eliminar</a></td>
+                <td><a href="{% url 'editar' 'tv' tv.id %}">Editar</a></td>
+                <td><a href="{% url 'eliminar' 'tv' tv.id %}">Eliminar</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -44,7 +50,7 @@
 
 
     <h1>Celulares</h1>
-
+    <a href="{% url 'anadir' 'celular' %}">Añadir un nuevo Celular</a>
     {% if celulares %}
     <ul>
         {% for celular in celulares %}

@@ -2,58 +2,85 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader # Carga la plantilla de HTML 
 from .models import Televisores, TelefonoCelular, Laptop # Aqui importo mis modelos creados
-from .forms import TVForma, TVDeleteForm
+from .forms import TVForma, LaptopForma, CelularForma
+
+# Diccionario que contiene todos los modelos
+MODELOS_FORMAS_ECOMMERCE = {
+    "tv": {
+        "modelo": Televisores,
+        "forma": TVForma
+    },
+    "celular": {
+        "modelo": TelefonoCelular,
+        "forma": CelularForma
+    },
+    "laptop": {
+        "modelo": Laptop,
+        "forma": LaptopForma
+    }
+}
 
 # Create your views here.
 def index(request):
-    todos_televisores = Televisores.objects.all()
-    todos_celulares = TelefonoCelular.objects.all()
-    todos_laptops = Laptop.objects.all()
+    # Revisar todos los electrodomésticos
+    datos_electrodomesticos = []
+    for nombre in MODELOS_FORMAS_ECOMMERCE.keys():
+        datos = MODELOS_FORMAS_ECOMMERCE[nombre]["modelo"].objects.all()
+        atributos = MODELOS_FORMAS_ECOMMERCE[nombre]["forma"].Meta.fields
+        datos_compilados = {"datos": datos, "atributos": atributos, "nombre": nombre}
+        datos_electrodomesticos.append(datos_compilados)
+        
     template = loader.get_template("ecommerce/index.html")
     context = {
-        "televisores": todos_televisores,
-        "celulares": todos_celulares,
-        "laptops": todos_laptops,
+        "datos_electrodomesticos": datos_electrodomesticos,
     }
-    print(context)
     return HttpResponse(template.render(context, request))
 
-def anadir_tv(request):
+def anadir(request, nombre):
+    # Chequear haya ese nombre en los modelos incluidos
+    if nombre in MODELOS_FORMAS_ECOMMERCE:
+        electrodomestico = MODELOS_FORMAS_ECOMMERCE[nombre]
+    else:
+        pass # Devolver algo nullo
     if request.method == 'POST':
-        forma = TVForma(request.POST)
+        forma = electrodomestico["forma"](request.POST)
         if forma.is_valid():
             forma.save()
             return redirect("index")
     else:
         # Cuando hay un Get por ejemplo, devolver una forma vacia
-        forma = TVForma()
-    print(forma)
-    print(forma)
-    print(forma)
+        forma = electrodomestico["forma"]()
     
-    return render(request, 'ecommerce/anadir_tv.html', {'forma': forma})
+    return render(request, 'ecommerce/anadir.html', {'forma': forma, 'nombre': nombre})
 
-def editar_tv(request, tv_id):
-    instancia_tv = get_object_or_404(Televisores, id=tv_id)
+def editar(request, nombre, id):
+    if nombre in MODELOS_FORMAS_ECOMMERCE:
+        electrodomestico = MODELOS_FORMAS_ECOMMERCE[nombre]
+    else:
+        pass # Devolver algo nullo
+    instancia_elec = get_object_or_404(electrodomestico["modelo"], id=id)
     if request.method == 'POST':
-        forma = TVForma(request.POST, instance=instancia_tv)
+        forma = electrodomestico["forma"](request.POST, instance=instancia_elec)
         if forma.is_valid():
             forma.save()
             return redirect('index')  # Redirect to the TV list view after successful edit
     else:
-        forma = TVForma(instance=instancia_tv)
+        forma = electrodomestico["forma"](instance=instancia_elec)
 
-    return render(request, 'ecommerce/editar_tv.html', {'form': forma, 'instancia_tv': instancia_tv, 'tv_id': tv_id})
+    return render(request, 'ecommerce/editar.html', {'form': forma, 'instancia_elec': instancia_elec, "nombre": nombre, 'id': id})
 
-def eliminar(request, tv_id):
-    instancia_tv = get_object_or_404(Televisores, id=tv_id)
+def eliminar(request, nombre, id):
+    if nombre in MODELOS_FORMAS_ECOMMERCE:
+        electrodomestico = MODELOS_FORMAS_ECOMMERCE[nombre]
+    else:
+        pass # Devolver algo nullo
+    instancia_elec = get_object_or_404(electrodomestico["modelo"], id=id)
 
     if request.method == 'POST':
         forma = TVDeleteForm(request.POST)
-        instancia_tv.delete()
+        instancia_elec.delete()
         return redirect('index')  # Redirect to the TV list view after successful deletion
     else:
         forma = TVDeleteForm()
-    print(forma)
 
-    return render(request, 'ecommerce/eliminar.html', {'forma': forma, 'instancia_tv': instancia_tv, 'tv_id': tv_id})
+    return render(request, 'ecommerce/eliminar.html', {'forma': forma, 'nombre': nombre, 'instancia_elec': instancia_elec, 'id': id})

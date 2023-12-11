@@ -1,0 +1,21 @@
+<!-- templates/edit_tv.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Electrodoméstico</title>
+</head>
+<body>
+    <h1>Editar Televisión {{tv_id}}</h1>
+
+    <form method="post" action="{% url 'editar_tv' tv_id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+
+    <a href="{% url 'index' %}">Back to TV List</a>
+</body>
+</html>

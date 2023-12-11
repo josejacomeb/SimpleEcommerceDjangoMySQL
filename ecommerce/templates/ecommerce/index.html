@@ -1,0 +1,68 @@
+<!-- templates/tv_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Artículos</title>
+</head>
+
+<body>
+    <h1>Televisores</h1>
+    <a href="{% url 'anadir_tv' %}">Añadir una nueva TV</a>
+
+    <table border="1">
+        {% if televisores %}
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Resolución</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tv in televisores %}
+            <tr>
+                <td>{{ tv.descripcion }}</td>
+                <td>{{ tv.marca }}</td>
+                <td>{{ tv.modelo }}</td>
+                <td>{{ tv.resolucion }}</td>
+                <td><a href="{% url 'editar_tv' tv.id %}">Editar</a></td>
+                <td><a href="{% url 'eliminar' tv.id %}">Eliminar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No hay televisores registrados.</p>
+    {% endif %}
+
+
+    <h1>Celulares</h1>
+
+    {% if celulares %}
+    <ul>
+        {% for celular in celulares %}
+        <li><a href="/ecommerce/{{ celular.id }}/">{{ celular.descripcion }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No hay celulares registrados.</p>
+    {% endif %}
+
+    <h1>Laptops</h1>
+    {% if laptops %}
+    <ul>
+        {% for laptop in laptops %}
+        <li><a href="/ecommerce/{{ laptop.id }}/">{{ laptop.descripcion }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No hay celulares registrados.</p>
+    {% endif %}
+</body>

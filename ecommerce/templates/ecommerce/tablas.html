@@ -1,27 +1,32 @@
 <!-- ecommerce/tablas.html -->
-<table border="1">
-    {% if electrodomesticos %}
-    <thead>
-        <tr>
-            {% for attr in atributos %}
-            <th> {{ attr }}</th>
-        </tr>
-        <th>Editar</th>
-        <th>Borrar</th>
-    </thead>
-    <tbody>
-        {% for elect in electrodomesticos %}
-        <tr>
-            {% for attr in atributos %}
-                <td>{% getattr(elect, attr) %}</td>
+{% load custom_filters  %}
+<h1> {{ nombre }}</h1>
+<a href="{% url 'anadir' nombre %}">Añadir una nueva TV</a>
+
+{% if electrodomesticos %}
+    <table border="1">
+        <thead>
+            <tr>
+                {% for attr in atributos %}
+                <th> {{ attr }}</th>
+                {% endfor %}
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for elect in electrodomesticos %}
+            <tr>
+                {% for attr in atributos %}
+                    <td> {{ elect|getattr_filter:attr }} </td>
+                {% endfor %}
+                
+                <td><a href="{% url 'editar' nombre elect.id %}">Editar</a></td>
+                <td><a href="{% url 'eliminar' nombre elect.id %}">Eliminar</a></td>
+            </tr>
             {% endfor %}
-            
-            <td><a href="{% url 'editar' nombre elect.id %}">Editar</a></td>
-            <td><a href="{% url 'eliminar' nombre elect.id %}">Eliminar</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {% else %}
     <p>No hay {{ nombre }} registrados.</p>
 {% endif %}

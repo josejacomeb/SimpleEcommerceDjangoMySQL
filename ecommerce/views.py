@@ -28,6 +28,7 @@ def index(request):
         datos = MODELOS_FORMAS_ECOMMERCE[nombre]["modelo"].objects.all()
         atributos = MODELOS_FORMAS_ECOMMERCE[nombre]["forma"].Meta.fields
         datos_compilados = {"datos": datos, "atributos": atributos, "nombre": nombre}
+        print(datos_compilados)
         datos_electrodomesticos.append(datos_compilados)
         
     template = loader.get_template("ecommerce/index.html")
@@ -77,10 +78,7 @@ def eliminar(request, nombre, id):
     instancia_elec = get_object_or_404(electrodomestico["modelo"], id=id)
 
     if request.method == 'POST':
-        forma = TVDeleteForm(request.POST)
         instancia_elec.delete()
         return redirect('index')  # Redirect to the TV list view after successful deletion
-    else:
-        forma = TVDeleteForm()
 
-    return render(request, 'ecommerce/eliminar.html', {'forma': forma, 'nombre': nombre, 'instancia_elec': instancia_elec, 'id': id})
+    return render(request, 'ecommerce/eliminar.html', {'nombre': nombre, 'instancia_elec': instancia_elec, 'id': id})

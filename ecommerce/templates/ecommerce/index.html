@@ -10,65 +10,7 @@
 </head>
 
 <body>
-
     {% for elect_data in datos_electrodomesticos %}
-        {% include "ecommerce/tablas.html" with atributos=elect_data.atributos  %}
+        {% include "ecommerce/tablas.html" with atributos=elect_data.atributos nombre=elect_data.nombre electrodomesticos=elect_data.datos %}
     {% endfor %}
-
-
-    <h1>Televisores</h1>
-    <a href="{% url 'anadir' 'tv' %}">Añadir una nueva TV</a>
-
-    <table border="1">
-        {% if televisores %}
-        <thead>
-            <tr>
-                <th>Descripción</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Resolución</th>
-                <th>Editar</th>
-                <th>Borrar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tv in televisores %}
-            <tr>
-                <td>{{ tv.descripcion }}</td>
-                <td>{{ tv.marca }}</td>
-                <td>{{ tv.modelo }}</td>
-                <td>{{ tv.resolucion }}</td>
-                <td><a href="{% url 'editar' 'tv' tv.id %}">Editar</a></td>
-                <td><a href="{% url 'eliminar' 'tv' tv.id %}">Eliminar</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>No hay televisores registrados.</p>
-    {% endif %}
-
-
-    <h1>Celulares</h1>
-    <a href="{% url 'anadir' 'celular' %}">Añadir un nuevo Celular</a>
-    {% if celulares %}
-    <ul>
-        {% for celular in celulares %}
-        <li><a href="/ecommerce/{{ celular.id }}/">{{ celular.descripcion }}</a></li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No hay celulares registrados.</p>
-    {% endif %}
-
-    <h1>Laptops</h1>
-    {% if laptops %}
-    <ul>
-        {% for laptop in laptops %}
-        <li><a href="/ecommerce/{{ laptop.id }}/">{{ laptop.descripcion }}</a></li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No hay celulares registrados.</p>
-    {% endif %}
 </body>

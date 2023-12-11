@@ -15,11 +15,3 @@ class LaptopForma(forms.ModelForm):
     class Meta:
         model = Laptop
         fields = ['descripcion', 'marca', 'modelo', "procesador", "tamano_pantalla"]
-
-        
-class TVDeleteForm(forms.Form):
-    confirm_delete = forms.BooleanField(
-        required=True,
-        initial=False,
-        widget=forms.HiddenInput,
-    )
